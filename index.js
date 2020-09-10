@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 
 const PORTA = 8080;
@@ -10,19 +11,7 @@ const items = [
     {id: 4, name: "item top 4", ativo: true}
 ];
 
-// lanches: { id, nome, descricao, estoque, image, categoria}
-// filtrar todos os resultados pelo query
-
-// lanches/:id 
-// se não tiver estoque 404
-
-// desafio
-// post, bodyParse, adicionar um novo item;
-// usar postman ou insomnia 
-
-// get all - pegar todos
-// query = localhost/item?q=valor&b=valor&c=1234
-// google.com/search?q=item
+app.use(bodyParser.json());
 
 app.get("/item", (requisicao, resposta) => {
     const { q } = requisicao.query;
