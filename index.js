@@ -5,10 +5,10 @@ const app = express();
 const PORTA = 8080;
 
 const items = [
-    {id: 1, name: "item estragado", ativo: true},
-    {id: 2, name: "item top 2", ativo: true}, 
-    {id: 3, name: "item top 3", ativo: true},
-    {id: 4, name: "item top 4", ativo: true}
+    {id: 1, name: "item estragado", ativo: true },
+    {id: 2, name: "item top 2", ativo: true }, 
+    {id: 3, name: "item top 3", ativo: true },
+    {id: 4, name: "item top 4", ativo: true }
 ];
 
 app.use(bodyParser.json());
@@ -30,11 +30,12 @@ app.get("/item/:id", (req, res) => {
     // busca item do array por id
     const item = items.find(pam => pam.id == id);
     
-    if(item) 
+    if(item) {
         res.send(item);
-    else 
+    } else {
         res.sendStatus(404);
-})
+    }
+});
 
 // inicializa servidor http na porta PORTA
 app.listen(8080, () => {
