@@ -8,3 +8,6 @@
 - funcionamento do verbo get;
 - como pegar parametros do tipo query e path;
 - como estruturar o projeto.
+
+10 de Setembro:
+- 
