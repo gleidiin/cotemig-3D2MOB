@@ -10,7 +10,7 @@ const items = [
     {id: 4, name: "item top 4", ativo: true}
 ];
 
-// lanches: { id, nome, estoque, categoria}
+// lanches: { id, nome, descricao, estoque, image, categoria}
 // filtrar todos os resultados pelo query
 
 // lanches/:id 
