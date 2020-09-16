@@ -1,6 +1,6 @@
-const express = require("express");
+const express    = require("express");
 const bodyParser = require("body-parser");
-const app = express();
+const app        = express();
 
 const PORTA = 8080;
 
@@ -35,6 +35,11 @@ app.get("/item/:id", (req, res) => {
     } else {
         res.sendStatus(404);
     }
+});
+
+app.post("/item", (req, res) => {
+    const objeto = req.body;
+    res.send(objeto);
 });
 
 // inicializa servidor http na porta PORTA
