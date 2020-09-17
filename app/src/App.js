@@ -1,55 +1,78 @@
 import React from 'react';
+import axios from 'axios';
+
 import './App.css';
 
 const style = {
-  "perfilContainer": {
+  perfilContainer: {
     "display": "inline-block",
-    "width": "20%",
-    "padding": "20px 10px"
+    "width": "20%"
   },
-  "perfilImagem": {
-    "display": "block",
+  perfilImagem: {
     "margin": "0 auto",
-    "width": "100px"
+    "width": "100%"
   },
   "perfilTexto": { "textAlign": "center" }
 }
 
-const ampliaNome = (nome) => {
-  alert(nome);
-}
-
-const alunos = [
-  {"nome": "Juan", "sobrenome": "Pereira", "imagem": "https://via.placeholder.com/300"},
-  {"nome": "Vinicius", "sobrenome": "Moreira", "imagem": "https://via.placeholder.com/300"},
-  {
-    "nome": "Rafael", "sobrenome": "Batista", "imagem": "https://via.placeholder.com/300"
-  }
-];
-
 
 const Perfil = (props) => (
-  <div className="containerAzul" stsyle={style.perfilContainer}>
-    <img onClick={ () => ampliaNome(props.nome) }
-      style={style.perfilImagem}
+  <div style={style.perfilContainer}>
+    <img style={style.perfilImagem}
       src={props.imagem}></img>
     <p style={ style.perfilTexto }>
-      { props.nome } - { props.sobrenome }
+      { props.nome }
     </p>
+    <button onClick={ () => props.clone(props.index) }>Clone</button>
+    <button onClick={ () => props.alteraNome(props.index) }>Adiciona Cotemig</button>
   </div>
 );
 
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      
+      alunos: []
+    };
+  
+    this.atualizaDados();
+  }
 
-function App() {
-  return (
-    <div className="App">
+  atualizaDados = async () => {
+    const res = await axios.get("http://localhost:8081/alunos") 
+    if(res.data) {
+      this.setState({ alunos: res.data });
+    }
+  }
+
+  adicionaCotemig = async (index) => {
+    const aluno = this.state.alunos[index];
+    aluno.nome += " - cotemig"; 
+    await axios.put(`http://localhost:8081/alunos/${index}`, aluno);
+    this.atualizaDados()
+  }
+
+  clone = async (index) => {
+    const aluno = this.state.alunos[index];
+    await axios.post("http://localhost:8081/alunos", aluno);
+    this.atualizaDados()
+  }
+
+  render() {
+    return (
+      <div className="App">
       {
-        alunos.map(aluno => 
-           (<Perfil {...aluno} />) 
+        
+        this.state.alunos.map((aluno, index) => 
+           (<Perfil key={index} index={index} 
+            alteraNome={ this.adicionaCotemig }
+            clone={ this.clone } {...aluno} />) 
         )
       }
     </div>
-  );
+    )
+  }
 }
 
 export default App;

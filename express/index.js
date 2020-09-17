@@ -1,21 +1,47 @@
 const express    = require("express");
 const bodyParser = require("body-parser");
+const cors       = require("cors");
 const app        = express();
 
-const PORTA = 8080;
+const PORTA = 8081;
 
-const items = [
-    {id: 1, name: "item estragado", ativo: true },
-    {id: 2, name: "item top 2", ativo: true }, 
-    {id: 3, name: "item top 3", ativo: true },
-    {id: 4, name: "item top 4", ativo: true }
+let alunos = [
+  {
+    "id": 0,
+    "nome": "Juan",
+    "imagem": "https://via.placeholder.com/300"
+  },
+  {
+    "id": 1,
+    "nome": "Vinicius",
+    "imagem": "https://via.placeholder.com/300"
+  },
+  {
+    "id": 2,
+    "nome": "Rafael",
+    "imagem": "https://via.placeholder.com/300"
+  }
 ];
 
 app.use(bodyParser.json());
+app.use(cors());
 
-app.get("/item", (requisicao, resposta) => {
-    const { q } = requisicao.query;
-    resposta.send(items.filter(item => item.name.includes(q)));
+app.get("/alunos", (req, resposta) => {
+    resposta.send(alunos);
+});
+
+app.post("/alunos", (req, res) => {
+    const aluno = req.body;
+    aluno.id = alunos.length;
+    alunos.push(aluno);
+    res.sendStatus(201);
+});
+
+app.put("/alunos/:id", (req, res) => {
+    const { id } = req.params;
+    const { nome, imagem } = req.body;
+    alunos[id] = { id, nome, imagem };
+    res.send(alunos[id]);
 });
 
 // exemplos
@@ -37,12 +63,7 @@ app.get("/item/:id", (req, res) => {
     }
 });
 
-app.post("/item", (req, res) => {
-    const objeto = req.body;
-    res.send(objeto);
-});
-
 // inicializa servidor http na porta PORTA
-app.listen(8080, () => {
+app.listen(PORTA, () => {
     console.log(`Servidor rodando na porta ${PORTA}`);
 });
