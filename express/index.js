@@ -3,67 +3,74 @@ const bodyParser = require("body-parser");
 const cors       = require("cors");
 const app        = express();
 
-const PORTA = 8081;
+const { UsuarioModel, ProfileModel, ChatModel, MensagemModel } = require("./database")
 
-let alunos = [
-  {
-    "id": 0,
-    "nome": "Juan",
-    "imagem": "https://via.placeholder.com/300"
-  },
-  {
-    "id": 1,
-    "nome": "Vinicius",
-    "imagem": "https://via.placeholder.com/300"
-  },
-  {
-    "id": 2,
-    "nome": "Rafael",
-    "imagem": "https://via.placeholder.com/300"
-  }
-];
+const PORTA = 8080;
 
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/alunos", (req, resposta) => {
-    resposta.send(alunos);
+app.use("/**", async (req, res, next) => {
+  const usuario = await UsuarioModel.findByPk(1);
+  req.usuario = usuario; 
+  next();
 });
 
-app.post("/alunos", (req, res) => {
-    const aluno = req.body;
-    aluno.id = alunos.length;
-    alunos.push(aluno);
-    res.sendStatus(201);
+// profile
+app.get("/profiles", async (req, res) => {
+  const profiles = await ProfileModel.findAll({ include: [ChatModel]})
+  res.send(profiles);
 });
 
-app.put("/alunos/:id", (req, res) => {
-    const { id } = req.params;
-    const { nome, imagem } = req.body;
-    alunos[id] = { id, nome, imagem };
-    res.send(alunos[id]);
+app.post("/profiles", async (req, res) => {
+  const profile = req.body;
+  profile.id_usuario = req.usuario.id;
+
+  const profileCriado = await ProfileModel.create(profile);
+  res.status(201).send(profileCriado);
 });
 
-// exemplos
-// coringa -> localhost:/item/1
-// path parametro -> id = 1 
-// meet.google.com/jvq-yddd-yvw
-// meet.google.com/:sala
+app.post("/profiles/:id/like", async(req, res) => {
+  const { id } = req.params;
 
-app.get("/item/:id", (req, res) => {
-    const id = req.params.id;
+  const chatCriado = await ChatModel.create({ 
+      nome: "chat por like",
+      id_usuario: req.usuario.id,
+      id_profile: id,
+      descricao: "chat criado por like"
+    });
 
-    // busca item do array por id
-    const item = items.find(pam => pam.id == id);
-    
-    if(item) {
-        res.send(item);
-    } else {
-        res.sendStatus(404);
-    }
+  res.status(201).send(chatCriado);
 });
 
-// inicializa servidor http na porta PORTA
+// chats
+app.get("/chats/:id/mensagens", async (req, res) => {
+  const { id } = req.params;
+  const mensagens = await MensagemModel.findAll({ where: { id_chat: id } });
+  res.send(mensagens);
+});
+
+app.post("/chats/:id/mensagens", async (req, res) => {
+  const { id } = req.params;
+  const idUsuario = req.usuario.id;
+  const mensagem = req.body;
+
+  mensagem.id_usuario = idUsuario; 
+  mensagem.id_chat = id;
+
+  const mensagens = await MensagemModel.create(mensagem);
+  res.send(mensagens);
+});
+
+// usuario
+
+app.post("/usuarios", async (req, res) => {
+  const usuario = req.body;
+  const usuarioCriado = await UsuarioModel.create(usuario);
+  res.status(201).send(usuarioCriado);
+});
+
+
 app.listen(PORTA, () => {
     console.log(`Servidor rodando na porta ${PORTA}`);
 });
