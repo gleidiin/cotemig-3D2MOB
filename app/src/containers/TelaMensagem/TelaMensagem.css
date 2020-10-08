@@ -1,0 +1,25 @@
+.container-mensagem {
+    padding: 20px 30px;
+    height: 50vh;
+    background-color: honeydew;
+    margin-bottom: 10px;
+}
+
+.balao-mensagem {
+    padding: 7px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #cecece; 
+    border-radius: 5px;
+    max-width: 25vw;
+    text-align: justify;
+    min-width: 10vw;
+    background: linear-gradient(0deg, rgba(215,215,215,1) 0%, rgba(255,255,255,1) 100%);
+}
+
+.input-mensagem {
+    display: block;
+    width: 100%;
+    border: 1px solid grey;
+    border-radius: 2px;
+    padding: 7px 10px;
+}

@@ -1,78 +1,53 @@
 import React from 'react';
-import axios from 'axios';
+import TelaPrincipal from './containers/TelaPrincipal/TelaPrincipal';
+import TelaMensagem  from './containers/TelaMensagem/TelaMensagem';
 
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const style = {
-  perfilContainer: {
-    "display": "inline-block",
-    "width": "20%"
-  },
-  perfilImagem: {
-    "margin": "0 auto",
-    "width": "100%"
-  },
-  "perfilTexto": { "textAlign": "center" }
-}
-
-
-const Perfil = (props) => (
-  <div style={style.perfilContainer}>
-    <img style={style.perfilImagem}
-      src={props.imagem}></img>
-    <p style={ style.perfilTexto }>
-      { props.nome }
-    </p>
-    <button onClick={ () => props.clone(props.index) }>Clone</button>
-    <button onClick={ () => props.alteraNome(props.index) }>Adiciona Cotemig</button>
-  </div>
-);
+import { pegarTodosProfiles } from './services/profile-service';
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      
-      alunos: []
-    };
-  
-    this.atualizaDados();
-  }
 
-  atualizaDados = async () => {
-    const res = await axios.get("http://localhost:8081/alunos") 
-    if(res.data) {
-      this.setState({ alunos: res.data });
+    constructor(props) {
+        super(props);
+        this.state = { amei: true, profiles: [], profile: {} };
     }
-  }
 
-  adicionaCotemig = async (index) => {
-    const aluno = this.state.alunos[index];
-    aluno.nome += " - cotemig"; 
-    await axios.put(`http://localhost:8081/alunos/${index}`, aluno);
-    this.atualizaDados()
-  }
+    componentDidMount() {
+        pegarTodosProfiles()
+            .then(profiles => {
+                const profile = profiles[0] ? profiles[0] : {};
+                this.setState({ profiles, profile });
+            });
+    }
+    
+    doAmei = () => {
+        this.setState({ amei: !this.state.amei });
+    }
 
-  clone = async (index) => {
-    const aluno = this.state.alunos[index];
-    await axios.post("http://localhost:8081/alunos", aluno);
-    this.atualizaDados()
-  }
+    doNext = () => {
 
-  render() {
-    return (
-      <div className="App">
-      {
-        
-        this.state.alunos.map((aluno, index) => 
-           (<Perfil key={index} index={index} 
-            alteraNome={ this.adicionaCotemig }
-            clone={ this.clone } {...aluno} />) 
+        const index = this.state.profiles.findIndex((prof) => prof.id == this.state.profile.id);
+
+        let profile = {}
+      
+        if (this.state.profiles.length == index + 1) {
+           profile = this.state.profiles[0]; 
+        } else {
+           profile = this.state.profiles[index + 1];
+        }
+
+        this.setState({...this.state, profile }); 
+    }
+
+    render() {
+        const { profile } = this.state; 
+        return (
+            <div>
+                <TelaPrincipal key={ profile.id } {...profile} doNext={this.doNext} doAmei={this.doAmei} />
+            </div>
         )
-      }
-    </div>
-    )
-  }
+    }
 }
 
 export default App;
