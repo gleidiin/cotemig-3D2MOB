@@ -1,4 +1,4 @@
-const { pegaTodosProfiles, criarProfile } = require("../../services/profile.service");
+const { pegaTodosProfiles, criarProfile, criarChat } = require("../../services/profile.service");
 
 const pegarTodos = async (req, res) => {
     try {
@@ -19,7 +19,14 @@ const criarPost = (req, res) => {
 }
 
 const likePost = (req, res) => {
-    res.send({});
+    const idUsuario = req.user.id;
+    const { id } = req.params;
+
+    criarChat(id, idUsuario).then(profileCriado => {
+        res.send(profileCriado)
+    }).catch(err => {
+        res.status(err.status).send(err)
+    })
 }
 
 module.exports = {
@@ -27,32 +34,3 @@ module.exports = {
     criarPost,
     likePost
 }
-
-
-// profile
-// app.get("/profiles", async (req, res) => {
-//     const profiles = await ProfileModel.findAll({ include: [ChatModel]})
-//     res.send(profiles);
-//   });
-  
-//   app.post("/profiles", async (req, res) => {
-//     const profile = req.body;
-//     profile.id_usuario = req.usuario.id;
-  
-//     const profileCriado = await ProfileModel.create(profile);
-//     res.status(201).send(profileCriado);
-//   });
-  
-//   app.post("/profiles/:id/like", async(req, res) => {
-//     const { id } = req.params;
-  
-//     const chatCriado = await ChatModel.create({ 
-//         nome: "chat por like",
-//         id_usuario: req.usuario.id,
-//         id_profile: id,
-//         descricao: "chat criado por like"
-//       });
-  
-//     res.status(201).send(chatCriado);
-//   });
-

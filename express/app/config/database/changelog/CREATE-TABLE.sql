@@ -2,7 +2,9 @@
 
 CREATE TABLE Usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome VARCHAR
+    nome VARCHAR,
+    email VARCHAR,
+    senha VARCHAR 
 )
 
 CREATE TABLE Profiles (
