@@ -17,7 +17,8 @@ const login = (req, res) => {
     .then(token => {
       res.status(201).send(token)
     }).catch(err => {
-      res.status(err.status).send(err);
+      console.log(err);
+      res.status(401).send(err);
     })
 }
 

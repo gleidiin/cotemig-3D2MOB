@@ -2,7 +2,7 @@ const { Sequelize } =  require("sequelize");
 
 const connection = new Sequelize({
     dialect: "sqlite",
-    storage: "./express/app/config/database/db.sqlite"
+    storage: "./app/config/database/db.sqlite"
 });
 
 connection.authenticate()
