@@ -1,8 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Form, FormControl, Button, Alert } from 'react-bootstrap';
 import { login } from '../../services/auth-service';
-
-
 class LoginPage extends React.Component {
 
     constructor(props) {
@@ -33,7 +32,8 @@ class LoginPage extends React.Component {
 
     render() {
         return (<div>
-            <Form onSubmit={this.doLogin}>
+            <h2 className="app-title">Faça seu login</h2>
+            <Form className="app-login-form" onSubmit={this.doLogin}>
                 { this.state.msgError ? <Alert variant={'dark'} >{this.state.msgError}</Alert> : ''}
                 <Form.Group>
                     <Form.Label>E-mail</Form.Label>
@@ -44,9 +44,11 @@ class LoginPage extends React.Component {
                     <FormControl onChange={this.inputHandler} type="password" name="senha" required />
                 </Form.Group>
                 <Form.Group>
-                    <Button type="submit">Entrar</Button>
+                    <Button block={true} type="submit">Entrar</Button>
+                    <Link className="float-right" to="/signup">Ou crie uma conta agora!</Link>
                 </Form.Group>
             </Form>
+            
         </div>)
     }
 

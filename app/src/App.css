@@ -1,0 +1,44 @@
+.app-container::before {
+    content: ' ';
+    position: absolute;
+    top: 0; 
+    right: 0;
+    z-index: -1;
+    border-bottom-left-radius: 70px;
+    border-bottom-right-radius: 70px;
+    min-width: 100%;
+    min-height: 40vh;
+    background: rgb(252,14,66);
+    background: linear-gradient(173deg, rgba(252,14,66,1) 0%, rgba(201,15,50,1) 100%);
+}
+
+.app-login-form {
+    display: block;
+    margin: 0 auto;
+    margin-top: 25px;
+    width: 90%;
+    background: #fff;
+    padding: 25px 30px 25px;
+    border-radius: 15px;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.2);
+}
+
+
+.app-title {
+    margin-left: 23px;
+    padding: 20px 0 0 0;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.app-picture-container {
+    background-color: #828282;
+    min-height: 75vh;
+    display: block;
+    margin: 0 auto;
+    width: 90%;
+    border-radius: 25px; 
+}

@@ -9,7 +9,7 @@ const UsuarioModel = connection.define("Usuarios", {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-            isNull: {
+            notNull: {
                 msg: "Campo e-mail não pode ser nulo"
             }
         }
@@ -18,7 +18,7 @@ const UsuarioModel = connection.define("Usuarios", {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-            isNull: {
+            notNull: {
                 msg: "Campo senha não pode ser nulo"
             }
         }
