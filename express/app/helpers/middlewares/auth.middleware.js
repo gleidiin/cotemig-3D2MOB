@@ -1,7 +1,7 @@
 const { me } = require("../../services/usuario.service")
 
 const autenticacao = (req, res, next) => {
-    const auth = req.header('Authorization')
+    const auth = req.header('Authorization');
 
     if(auth && auth.includes("Bearer ")) {
         const token = auth.split(' ')[1]

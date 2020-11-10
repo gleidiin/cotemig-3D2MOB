@@ -2,7 +2,8 @@ const { pegaTodosProfiles, criarProfile, criarChat } = require("../../services/p
 
 const pegarTodos = async (req, res) => {
     try {
-        const profiles = await pegaTodosProfiles()
+        const { id } = req.usuario;
+        const profiles = await pegaTodosProfiles(id)
         res.send(profiles)
     } catch (error) {
         res.status(error.status).send(error);
@@ -19,7 +20,7 @@ const criarPost = (req, res) => {
 }
 
 const likePost = (req, res) => {
-    const idUsuario = req.user.id;
+    const idUsuario = req.usuario.id;
     const { id } = req.params;
 
     criarChat(id, idUsuario).then(profileCriado => {

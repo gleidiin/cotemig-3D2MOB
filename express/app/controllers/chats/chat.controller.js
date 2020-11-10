@@ -1,17 +1,27 @@
-app.get("/chats/:id/mensagens", async (req, res) => {
-    const { id } = req.params;
-    const mensagens = await MensagemModel.findAll({ where: { id_chat: id } });
-    res.send(mensagens);
-  });
-  
-  app.post("/chats/:id/mensagens", async (req, res) => {
-    const { id } = req.params;
-    const idUsuario = req.usuario.id;
-    const mensagem = req.body;
-  
-    mensagem.id_usuario = idUsuario; 
-    mensagem.id_chat = id;
-  
-    const mensagens = await MensagemModel.create(mensagem);
-    res.send(mensagens);
-  });
+const service = require('../../services/chat.service');
+
+const pegarTodasOsChats = async (req, res) => {
+  const { id } = req.usuario;
+  const chats = await service.pegarTodosChatPorIdUsuario(id);
+  res.send(chats);
+}
+
+const pegarTodasMensagensPorChatId = async (req, res) => {
+  const { id } = req.params;
+  const mensagens = await service.pegarTodasMensagemPorChatId(id);
+  res.send(mensagens);
+}
+
+const criarMensagemPorChatId = async (req, res) => {
+  const { id } = req.params;
+  const mensagem = req.body;
+  const mensagemCriada = await service.criarMensagemPorChatId(req.usuario.id, id, mensagem);
+  res.status(201).send(mensagemCriada);
+}
+
+
+module.exports = {
+  pegarTodasOsChats,
+  pegarTodasMensagensPorChatId,
+  criarMensagemPorChatId
+}

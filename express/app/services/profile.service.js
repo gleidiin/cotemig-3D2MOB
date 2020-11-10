@@ -1,16 +1,24 @@
 const { ProfileModel, ChatModel } = require("../models");
 const errorHandler = require("../helpers/error-helper");
 
-const pegaTodosProfiles = async (pagina = 1, limite = 20) => {
+const pegaTodosProfiles = async (idUsuario, pagina = 1, limite = 20) => {
     const offset = (pagina - 1) * limite;   
     try {
-        const profile = await ProfileModel.findAll({
+        let profiles = await ProfileModel.findAll({
+            include: [ChatModel],
             offset: offset,
             limit: limite,
             order:  [['nome', 'DESC']]
         });
+
+        profiles = profiles.map(profile => {
+            profile = profile.toJSON();
+            profile.isLiked = profile.Chats
+                .findIndex(chat => chat.id_usuario == idUsuario) != -1;
+            return profile;
+        });
         
-        return profile;
+        return profiles;
     } catch (error) {
         throw errorHandler('Não foi possível carregar profiles', 500, [])
     }
@@ -27,12 +35,19 @@ const criarProfile = async (profile) => {
 
 const criarChat = async (idProfile, idUsuario) => {
     try {
-        const chatCriado = await ChatModel.create({ 
-            nome: "chat por like",
-            id_usuario: idUsuario,
-            id_profile: idProfile,
-            descricao: "chat criado por like"
-          });
+
+        let chatCriado = await ChatModel.findOne({
+            where: { id_usuario: idUsuario, id_profile: idProfile }
+        });
+        
+        if(!chatCriado) {
+            chatCriado = await ChatModel.create({ 
+               nome: "chat por like",
+               id_usuario: idUsuario,
+               id_profile: idProfile,
+               descricao: "chat criado por like"
+             });
+        }
         return chatCriado;
     } catch (error) {
         throw errorHandler("Erro ao tentar dar like", 400, error.errors);

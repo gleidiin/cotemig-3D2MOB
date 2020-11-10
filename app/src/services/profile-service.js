@@ -9,7 +9,8 @@ const pegarTodosProfiles = async () => {
 }
 
 const likeProfile = async(id) => {
-    await http.post(ENDPOINT + id + LIKE)
+    const { data } = await http.post(ENDPOINT + id + LIKE)
+    return data;
 }
  
 export {
